@@ -494,12 +494,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
   transition: all 0.15s ease;
-}
-
-.preset-item:hover .preset-delete-btn {
-  opacity: 1;
 }
 
 .preset-delete-btn:hover {
