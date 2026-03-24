@@ -1,11 +1,13 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useChartState } from './hooks/useChartState';
 import { usePresets } from './hooks/usePresets';
 import { themes, DEFAULT_THEME_ID } from './themes';
+import type { ChartTheme } from './types/theme';
 import { OctagonChart } from './components/OctagonChart';
 import { ControlPanel } from './components/ControlPanel';
 import { ThemeSelector } from './components/ThemeSelector';
 import { ExportBar } from './components/ExportBar';
+import { ImageThemeGenerator } from './components/ImageThemeGenerator';
 import './global.css';
 
 export default function App() {
@@ -23,7 +25,13 @@ export default function App() {
   } = useChartState();
 
   const { allPresets, savePreset, deletePreset, isCustom } = usePresets();
-  const theme = themes[themeId] ?? themes[DEFAULT_THEME_ID];
+  const [customImageTheme, setCustomImageTheme] = useState<ChartTheme | null>(null);
+
+  // Resolve current theme: check custom first, then built-in
+  const theme = themeId === 'custom-image' && customImageTheme
+    ? customImageTheme
+    : themes[themeId] ?? themes[DEFAULT_THEME_ID];
+
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -38,6 +46,11 @@ export default function App() {
       document.head.appendChild(link);
     }
   }, [theme]);
+
+  const handleImageTheme = (newTheme: ChartTheme) => {
+    setCustomImageTheme(newTheme);
+    setThemeId('custom-image');
+  };
 
   const cssVars = {
     '--page-bg': theme.ui.pageBg,
@@ -62,7 +75,11 @@ export default function App() {
           <h1 className="app-title">Octagon Chart</h1>
         </div>
         <div className="header-center">
-          <ThemeSelector currentThemeId={themeId} onSelect={setThemeId} />
+          <ThemeSelector
+            currentThemeId={themeId}
+            onSelect={setThemeId}
+            customImageTheme={customImageTheme}
+          />
         </div>
         <div className="header-right">
           <ExportBar
@@ -89,6 +106,10 @@ export default function App() {
             isCustomPreset={isCustom}
             theme={theme}
           />
+          <div className="panel-section" style={{ padding: '0 20px 20px' }}>
+            <label className="panel-label">Image Theme</label>
+            <ImageThemeGenerator onThemeGenerated={handleImageTheme} />
+          </div>
         </aside>
 
         <section className="app-chart-area">
