@@ -789,3 +789,49 @@ body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
 }
+
+/* =============================================
+   STAT-CHART HOVER SYNC
+   ============================================= */
+
+.stat-row-highlighted {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.stat-row-highlighted .stat-label-btn {
+  color: var(--accent);
+}
+
+.stat-row-highlighted .stat-value {
+  color: var(--accent);
+  transform: scale(1.1);
+}
+
+/* =============================================
+   ENTRANCE ANIMATIONS
+   ============================================= */
+
+@keyframes drawPolygon {
+  from {
+    stroke-dashoffset: 2000;
+    fill-opacity: 0;
+  }
+  60% {
+    fill-opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    fill-opacity: 1;
+  }
+}
+
+@keyframes growBar {
+  from {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  to {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}

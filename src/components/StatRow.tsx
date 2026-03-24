@@ -8,9 +8,12 @@ interface StatRowProps {
   onLabelChange: (index: number, label: string) => void;
   onRemove?: (index: number) => void;
   accentColor: string;
+  highlighted?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
-export function StatRow({ label, value, index, onValueChange, onLabelChange, onRemove, accentColor }: StatRowProps) {
+export function StatRow({ label, value, index, onValueChange, onLabelChange, onRemove, accentColor, highlighted, onMouseEnter, onMouseLeave }: StatRowProps) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(label);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -30,7 +33,11 @@ export function StatRow({ label, value, index, onValueChange, onLabelChange, onR
   };
 
   return (
-    <div className="stat-row">
+    <div
+      className={`stat-row ${highlighted ? 'stat-row-highlighted' : ''}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div className="stat-label-wrap">
         <span className="stat-index">{String(index + 1).padStart(2, '0')}</span>
         {editing ? (

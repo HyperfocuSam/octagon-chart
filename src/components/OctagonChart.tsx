@@ -7,10 +7,13 @@ interface OctagonChartProps {
   stats: StatItem[];
   theme: ChartTheme;
   size?: number;
+  hoveredIndex: number | null;
+  onHoverIndex: (index: number | null) => void;
+  animKey: number;
 }
 
 export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
-  function OctagonChart({ stats, theme, size = 500 }, ref) {
+  function OctagonChart({ stats, theme, size = 500, hoveredIndex, onHoverIndex, animKey }, ref) {
     const cx = size / 2;
     const cy = size / 2;
     const radius = size * 0.36;
@@ -39,6 +42,7 @@ export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
 
     const gradientId = `fill-gradient-${theme.id}`;
     const glowId = `glow-${theme.id}`;
+    const highlightGlowId = `highlight-glow-${theme.id}`;
 
     const labels = stats.map((stat, i) => {
       const pt = getPoint(cx, cy, radius, i);
@@ -46,15 +50,26 @@ export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
       const anchor = getLabelAnchor(i);
       const lx = pt.x + offset.dx;
       const ly = pt.y + offset.dy;
+      const isHovered = hoveredIndex === i;
 
       return (
-        <g key={i}>
+        <g
+          key={i}
+          onMouseEnter={() => onHoverIndex(i)}
+          onMouseLeave={() => onHoverIndex(null)}
+          style={{ cursor: 'default' }}
+        >
           <text
             x={lx}
             y={ly - 6}
             textAnchor={anchor}
-            fill={chart.labelColor}
-            style={{ fontFamily: `'${theme.fonts.display}', sans-serif`, fontSize: '12px', fontWeight: 600 }}
+            fill={isHovered ? chart.strokeColor : chart.labelColor}
+            style={{
+              fontFamily: `'${theme.fonts.display}', sans-serif`,
+              fontSize: isHovered ? '13px' : '12px',
+              fontWeight: isHovered ? 700 : 600,
+              transition: 'all 0.2s ease',
+            }}
           >
             {stat.label}
           </text>
@@ -62,8 +77,13 @@ export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
             x={lx}
             y={ly + 10}
             textAnchor={anchor}
-            fill={chart.valueColor}
-            style={{ fontFamily: `'${theme.fonts.body}', sans-serif`, fontSize: '11px', fontWeight: 400 }}
+            fill={isHovered ? chart.strokeColor : chart.valueColor}
+            style={{
+              fontFamily: `'${theme.fonts.body}', sans-serif`,
+              fontSize: '11px',
+              fontWeight: isHovered ? 600 : 400,
+              transition: 'all 0.2s ease',
+            }}
           >
             {stat.value}
           </text>
@@ -75,17 +95,24 @@ export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
       const v = values[i];
       const r = (v / 100) * radius;
       const pt = getPoint(cx, cy, r, i);
+      const isHovered = hoveredIndex === i;
       return (
         <circle
           key={i}
           cx={pt.x}
           cy={pt.y}
-          r={chart.dotRadius}
+          r={isHovered ? chart.dotRadius * 1.8 : chart.dotRadius}
           fill={chart.dotColor}
-          filter={chart.glowColor ? `url(#${glowId})` : undefined}
+          filter={isHovered ? `url(#${highlightGlowId})` : (chart.glowColor ? `url(#${glowId})` : undefined)}
+          onMouseEnter={() => onHoverIndex(i)}
+          onMouseLeave={() => onHoverIndex(null)}
+          style={{ cursor: 'default', transition: 'r 0.2s ease' }}
         />
       );
     });
+
+    // Polygon perimeter for stroke animation
+    const perimeterEstimate = 2 * Math.PI * radius * 0.7;
 
     return (
       <svg
@@ -113,6 +140,13 @@ export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
               </feMerge>
             </filter>
           )}
+          <filter id={highlightGlowId} x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation={(chart.glowBlur ?? 4) * 2} result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
 
         {/* Grid rings */}
@@ -123,6 +157,7 @@ export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
 
         {/* Stat polygon */}
         <polygon
+          key={`poly-${animKey}`}
           points={polygonPoints}
           fill={chart.gradientFill ? `url(#${gradientId})` : chart.fillColor}
           fillOpacity={chart.gradientFill ? 1 : chart.fillOpacity}
@@ -130,7 +165,12 @@ export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
           strokeWidth={chart.strokeWidth}
           strokeLinejoin="round"
           filter={chart.glowColor ? `url(#${glowId})` : undefined}
-          style={{ transition: 'all 0.3s ease' }}
+          style={{
+            transition: 'all 0.3s ease',
+            strokeDasharray: perimeterEstimate,
+            strokeDashoffset: 0,
+            animation: `drawPolygon 0.8s ease-out`,
+          }}
         />
 
         {/* Vertex dots */}

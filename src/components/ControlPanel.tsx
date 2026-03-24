@@ -22,6 +22,8 @@ interface ControlPanelProps {
   chartMode: ChartMode;
   onAddStat: () => void;
   onRemoveStat: (index: number) => void;
+  hoveredIndex: number | null;
+  onHoverIndex: (index: number | null) => void;
 }
 
 export function ControlPanel({
@@ -39,6 +41,8 @@ export function ControlPanel({
   chartMode,
   onAddStat,
   onRemoveStat,
+  hoveredIndex,
+  onHoverIndex,
 }: ControlPanelProps) {
   const canAdd = chartMode !== 'octagon' && stats.length < MAX_STATS;
   const canRemove = chartMode !== 'octagon' && stats.length > MIN_STATS;
@@ -86,6 +90,9 @@ export function ControlPanel({
               onLabelChange={onLabelChange}
               onRemove={canRemove ? onRemoveStat : undefined}
               accentColor={theme.ui.accent}
+              highlighted={hoveredIndex === i}
+              onMouseEnter={() => onHoverIndex(i)}
+              onMouseLeave={() => onHoverIndex(null)}
             />
           ))}
         </div>

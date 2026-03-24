@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { useChartState } from './hooks/useChartState';
 import { usePresets } from './hooks/usePresets';
 import { themes, DEFAULT_THEME_ID } from './themes';
@@ -32,6 +32,8 @@ export default function App() {
 
   const { allPresets, savePreset, deletePreset, isCustom } = usePresets();
   const [customImageTheme, setCustomImageTheme] = useState<ChartTheme | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [animKey, setAnimKey] = useState(0);
 
   const theme = themeId === 'custom-image' && customImageTheme
     ? customImageTheme
@@ -51,10 +53,21 @@ export default function App() {
     }
   }, [theme]);
 
-  const handleImageTheme = (newTheme: ChartTheme) => {
+  // Trigger entrance animation on mode or theme change
+  const prevMode = useRef(chartMode);
+  const prevTheme = useRef(themeId);
+  useEffect(() => {
+    if (prevMode.current !== chartMode || prevTheme.current !== themeId) {
+      setAnimKey(k => k + 1);
+      prevMode.current = chartMode;
+      prevTheme.current = themeId;
+    }
+  }, [chartMode, themeId]);
+
+  const handleImageTheme = useCallback((newTheme: ChartTheme) => {
     setCustomImageTheme(newTheme);
     setThemeId('custom-image');
-  };
+  }, [setThemeId]);
 
   const cssVars = {
     '--page-bg': theme.ui.pageBg,
@@ -73,12 +86,13 @@ export default function App() {
   } as React.CSSProperties;
 
   const renderChart = () => {
+    const common = { ref: svgRef, stats, theme, size: 460, hoveredIndex, onHoverIndex: setHoveredIndex, animKey };
     switch (chartMode) {
       case 'bar':
-        return <BarChart ref={svgRef} stats={stats} theme={theme} size={460} />;
+        return <BarChart {...common} />;
       case 'octagon':
       default:
-        return <OctagonChart ref={svgRef} stats={stats} theme={theme} size={460} />;
+        return <OctagonChart {...common} />;
     }
   };
 
@@ -122,6 +136,8 @@ export default function App() {
             chartMode={chartMode}
             onAddStat={addStat}
             onRemoveStat={removeStat}
+            hoveredIndex={hoveredIndex}
+            onHoverIndex={setHoveredIndex}
           />
           <div className="panel-section" style={{ padding: '0 20px 20px' }}>
             <label className="panel-label">Image Theme</label>
