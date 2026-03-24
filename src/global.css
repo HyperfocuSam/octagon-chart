@@ -811,17 +811,20 @@ body {
    ENTRANCE ANIMATIONS
    ============================================= */
 
-@keyframes drawPolygon {
+.octagon-polygon {
+  animation: fadeInPolygon 0.6s ease-out;
+}
+
+@keyframes fadeInPolygon {
   from {
-    stroke-dashoffset: 2000;
-    fill-opacity: 0;
-  }
-  60% {
-    fill-opacity: 0;
+    opacity: 0;
+    transform: scale(0.85);
+    transform-origin: center;
   }
   to {
-    stroke-dashoffset: 0;
-    fill-opacity: 1;
+    opacity: 1;
+    transform: scale(1);
+    transform-origin: center;
   }
 }
 

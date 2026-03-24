@@ -111,9 +111,6 @@ export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
       );
     });
 
-    // Polygon perimeter for stroke animation
-    const perimeterEstimate = 2 * Math.PI * radius * 0.7;
-
     return (
       <svg
         ref={ref}
@@ -165,12 +162,8 @@ export const OctagonChart = forwardRef<SVGSVGElement, OctagonChartProps>(
           strokeWidth={chart.strokeWidth}
           strokeLinejoin="round"
           filter={chart.glowColor ? `url(#${glowId})` : undefined}
-          style={{
-            transition: 'all 0.3s ease',
-            strokeDasharray: perimeterEstimate,
-            strokeDashoffset: 0,
-            animation: `drawPolygon 0.8s ease-out`,
-          }}
+          className="octagon-polygon"
+          style={{ transition: 'all 0.3s ease' }}
         />
 
         {/* Vertex dots */}
