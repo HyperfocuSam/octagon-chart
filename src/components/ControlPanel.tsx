@@ -1,8 +1,11 @@
-import type { StatItem } from '../types/chart';
+import type { StatItem, ChartMode } from '../types/chart';
 import type { ChartTheme } from '../types/theme';
 import type { Preset } from '../utils/presets';
 import { StatRow } from './StatRow';
 import { PresetSelector } from './PresetSelector';
+
+const MIN_STATS = 2;
+const MAX_STATS = 10;
 
 interface ControlPanelProps {
   title: string;
@@ -16,6 +19,9 @@ interface ControlPanelProps {
   presets: Preset[];
   isCustomPreset: (name: string) => boolean;
   theme: ChartTheme;
+  chartMode: ChartMode;
+  onAddStat: () => void;
+  onRemoveStat: (index: number) => void;
 }
 
 export function ControlPanel({
@@ -30,7 +36,13 @@ export function ControlPanel({
   presets,
   isCustomPreset,
   theme,
+  chartMode,
+  onAddStat,
+  onRemoveStat,
 }: ControlPanelProps) {
+  const canAdd = chartMode !== 'octagon' && stats.length < MAX_STATS;
+  const canRemove = chartMode !== 'octagon' && stats.length > MIN_STATS;
+
   return (
     <div className="control-panel">
       <div className="panel-section">
@@ -55,7 +67,14 @@ export function ControlPanel({
       />
 
       <div className="panel-section">
-        <label className="panel-label">Stats</label>
+        <div className="stats-header">
+          <label className="panel-label">Stats ({stats.length})</label>
+          {canAdd && (
+            <button className="stat-add-btn" onClick={onAddStat} title="Add stat">
+              +
+            </button>
+          )}
+        </div>
         <div className="stats-list">
           {stats.map((stat, i) => (
             <StatRow
@@ -65,6 +84,7 @@ export function ControlPanel({
               value={stat.value}
               onValueChange={onValueChange}
               onLabelChange={onLabelChange}
+              onRemove={canRemove ? onRemoveStat : undefined}
               accentColor={theme.ui.accent}
             />
           ))}

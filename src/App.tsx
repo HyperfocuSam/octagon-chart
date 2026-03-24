@@ -20,6 +20,8 @@ export default function App() {
     updateStat,
     updateLabel,
     setStats,
+    addStat,
+    removeStat,
     themeId,
     setThemeId,
     chartMode,
@@ -117,6 +119,9 @@ export default function App() {
             presets={allPresets}
             isCustomPreset={isCustom}
             theme={theme}
+            chartMode={chartMode}
+            onAddStat={addStat}
+            onRemoveStat={removeStat}
           />
           <div className="panel-section" style={{ padding: '0 20px 20px' }}>
             <label className="panel-label">Image Theme</label>

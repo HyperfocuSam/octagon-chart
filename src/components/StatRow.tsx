@@ -6,10 +6,11 @@ interface StatRowProps {
   index: number;
   onValueChange: (index: number, value: number) => void;
   onLabelChange: (index: number, label: string) => void;
+  onRemove?: (index: number) => void;
   accentColor: string;
 }
 
-export function StatRow({ label, value, index, onValueChange, onLabelChange, accentColor }: StatRowProps) {
+export function StatRow({ label, value, index, onValueChange, onLabelChange, onRemove, accentColor }: StatRowProps) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(label);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -67,6 +68,15 @@ export function StatRow({ label, value, index, onValueChange, onLabelChange, acc
         />
         <span className="stat-value">{value}</span>
       </div>
+      {onRemove && (
+        <button
+          className="stat-remove-btn"
+          onClick={() => onRemove(index)}
+          title="Remove stat"
+        >
+          ×
+        </button>
+      )}
     </div>
   );
 }

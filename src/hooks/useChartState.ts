@@ -37,6 +37,20 @@ export function useChartState() {
     setStats(prev => prev.map((s, i) => i === index ? { ...s, label } : s));
   }, []);
 
+  const addStat = useCallback(() => {
+    setStats(prev => {
+      if (prev.length >= 10) return prev;
+      return [...prev, { label: `Stat ${prev.length + 1}`, value: 50 }];
+    });
+  }, []);
+
+  const removeStat = useCallback((index: number) => {
+    setStats(prev => {
+      if (prev.length <= 2) return prev;
+      return prev.filter((_, i) => i !== index);
+    });
+  }, []);
+
   const loadConfig = useCallback((config: ChartConfig) => {
     if (Array.isArray(config.stats) && config.stats.length > 0) {
       setTitle(config.title);
@@ -60,7 +74,7 @@ export function useChartState() {
 
   return {
     title, setTitle,
-    stats, updateStat, updateLabel, setStats,
+    stats, updateStat, updateLabel, setStats, addStat, removeStat,
     themeId, setThemeId,
     chartMode, setChartMode,
     loadConfig, getConfig,
