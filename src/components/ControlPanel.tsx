@@ -1,5 +1,6 @@
 import type { StatItem } from '../types/chart';
 import type { ChartTheme } from '../types/theme';
+import type { Preset } from '../utils/presets';
 import { StatRow } from './StatRow';
 import { PresetSelector } from './PresetSelector';
 
@@ -10,6 +11,10 @@ interface ControlPanelProps {
   onValueChange: (index: number, value: number) => void;
   onLabelChange: (index: number, label: string) => void;
   onPresetSelect: (stats: StatItem[]) => void;
+  onPresetSave: (name: string, stats: StatItem[]) => void;
+  onPresetDelete: (name: string) => void;
+  presets: Preset[];
+  isCustomPreset: (name: string) => boolean;
   theme: ChartTheme;
 }
 
@@ -20,6 +25,10 @@ export function ControlPanel({
   onValueChange,
   onLabelChange,
   onPresetSelect,
+  onPresetSave,
+  onPresetDelete,
+  presets,
+  isCustomPreset,
   theme,
 }: ControlPanelProps) {
   return (
@@ -36,7 +45,14 @@ export function ControlPanel({
         />
       </div>
 
-      <PresetSelector onSelect={onPresetSelect} />
+      <PresetSelector
+        presets={presets}
+        onSelect={onPresetSelect}
+        onSave={onPresetSave}
+        onDelete={onPresetDelete}
+        isCustom={isCustomPreset}
+        currentStats={stats}
+      />
 
       <div className="panel-section">
         <label className="panel-label">Stats</label>

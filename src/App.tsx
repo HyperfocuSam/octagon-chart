@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useChartState } from './hooks/useChartState';
+import { usePresets } from './hooks/usePresets';
 import { themes, DEFAULT_THEME_ID } from './themes';
 import { OctagonChart } from './components/OctagonChart';
 import { ControlPanel } from './components/ControlPanel';
@@ -21,6 +22,7 @@ export default function App() {
     getConfig,
   } = useChartState();
 
+  const { allPresets, savePreset, deletePreset, isCustom } = usePresets();
   const theme = themes[themeId] ?? themes[DEFAULT_THEME_ID];
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -81,6 +83,10 @@ export default function App() {
             onValueChange={updateStat}
             onLabelChange={updateLabel}
             onPresetSelect={setStats}
+            onPresetSave={savePreset}
+            onPresetDelete={deletePreset}
+            presets={allPresets}
+            isCustomPreset={isCustom}
             theme={theme}
           />
         </aside>
