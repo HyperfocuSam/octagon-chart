@@ -4,9 +4,11 @@ import { usePresets } from './hooks/usePresets';
 import { themes, DEFAULT_THEME_ID } from './themes';
 import type { ChartTheme } from './types/theme';
 import { OctagonChart } from './components/OctagonChart';
+import { BarChart } from './components/BarChart';
 import { ControlPanel } from './components/ControlPanel';
 import { ThemeSelector } from './components/ThemeSelector';
 import { ExportBar } from './components/ExportBar';
+import { ChartModeMenu } from './components/ChartModeMenu';
 import { ImageThemeGenerator } from './components/ImageThemeGenerator';
 import './global.css';
 
@@ -20,6 +22,8 @@ export default function App() {
     setStats,
     themeId,
     setThemeId,
+    chartMode,
+    setChartMode,
     loadConfig,
     getConfig,
   } = useChartState();
@@ -27,7 +31,6 @@ export default function App() {
   const { allPresets, savePreset, deletePreset, isCustom } = usePresets();
   const [customImageTheme, setCustomImageTheme] = useState<ChartTheme | null>(null);
 
-  // Resolve current theme: check custom first, then built-in
   const theme = themeId === 'custom-image' && customImageTheme
     ? customImageTheme
     : themes[themeId] ?? themes[DEFAULT_THEME_ID];
@@ -35,7 +38,6 @@ export default function App() {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Load theme font
   useEffect(() => {
     const linkId = `font-${theme.id}`;
     if (!document.getElementById(linkId)) {
@@ -68,11 +70,21 @@ export default function App() {
     '--font-body': `'${theme.fonts.body}', sans-serif`,
   } as React.CSSProperties;
 
+  const renderChart = () => {
+    switch (chartMode) {
+      case 'bar':
+        return <BarChart ref={svgRef} stats={stats} theme={theme} size={460} />;
+      case 'octagon':
+      default:
+        return <OctagonChart ref={svgRef} stats={stats} theme={theme} size={460} />;
+    }
+  };
+
   return (
     <div className="app-root" style={cssVars}>
       <header className="app-header">
         <div className="header-left">
-          <h1 className="app-title">Octagon Chart</h1>
+          <ChartModeMenu currentMode={chartMode} onSelect={setChartMode} />
         </div>
         <div className="header-center">
           <ThemeSelector
@@ -125,7 +137,7 @@ export default function App() {
             <div className="chart-title" style={{ fontFamily: `'${theme.fonts.display}', sans-serif` }}>
               {title}
             </div>
-            <OctagonChart ref={svgRef} stats={stats} theme={theme} size={460} />
+            {renderChart()}
           </div>
         </section>
       </main>

@@ -3,11 +3,38 @@ export interface StatItem {
   value: number;
 }
 
+export type ChartMode = 'octagon' | 'bar';
+
+export interface ChartModeInfo {
+  id: ChartMode;
+  name: string;
+  description: string;
+  icon: string;
+  requiredStats?: number; // undefined = any count
+}
+
+export const CHART_MODES: ChartModeInfo[] = [
+  {
+    id: 'octagon',
+    name: 'Octagon',
+    description: 'Radar chart with 8 axes',
+    icon: '⬡',
+    requiredStats: 8,
+  },
+  {
+    id: 'bar',
+    name: 'Ability Bars',
+    description: 'Horizontal bar chart',
+    icon: '▮',
+  },
+];
+
 export interface ChartConfig {
   version: 1;
   title: string;
   stats: StatItem[];
   themeId: string;
+  chartMode?: ChartMode;
 }
 
 export const DEFAULT_STATS: StatItem[] = [
