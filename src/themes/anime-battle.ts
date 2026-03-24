@@ -1,0 +1,55 @@
+import type { ChartTheme } from '../types/theme';
+
+export const animeBattle: ChartTheme = {
+  id: 'anime-battle',
+  name: 'Anime Battle',
+  description: 'Bold energy with dynamic gradients',
+  fonts: {
+    display: 'Archivo Black',
+    body: 'Inter',
+    import: 'https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&display=swap',
+  },
+  chart: {
+    background: '#0f0f1a',
+    gridLines: '#2a2a4a',
+    gridLineWidth: 1.5,
+    axisLines: '#3030aa',
+    axisLineWidth: 1,
+    fillColor: '#ff4444',
+    fillOpacity: 0.2,
+    strokeColor: '#ff6644',
+    strokeWidth: 3,
+    dotColor: '#ffaa00',
+    dotRadius: 5,
+    labelColor: '#c0c0ff',
+    valueColor: '#ff8866',
+    glowColor: '#ff4444',
+    glowBlur: 8,
+    gradientFill: {
+      stops: [
+        { offset: '0%', color: '#ff4444', opacity: 0.35 },
+        { offset: '60%', color: '#ff8800', opacity: 0.2 },
+        { offset: '100%', color: '#ffcc00', opacity: 0.05 },
+      ],
+    },
+    gridRings: 4,
+    gridStyle: 'circle',
+  },
+  ui: {
+    pageBg: '#0a0a14',
+    panelBg: '#141422',
+    panelBorder: '#2a2a4a',
+    textPrimary: '#e8e8ff',
+    textSecondary: '#8080aa',
+    accent: '#ff4444',
+    accentHover: '#ff6666',
+    inputBg: '#10101c',
+    inputBorder: '#2a2a4a',
+    sliderTrack: '#2a2a4a',
+    sliderThumb: '#ff4444',
+  },
+  effects: {
+    chartShadow: '0 0 50px rgba(255, 68, 68, 0.2)',
+    animateGlow: true,
+  },
+};

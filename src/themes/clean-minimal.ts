@@ -1,0 +1,43 @@
+import type { ChartTheme } from '../types/theme';
+
+export const cleanMinimal: ChartTheme = {
+  id: 'clean-minimal',
+  name: 'Clean Minimal',
+  description: 'Simple and elegant with clean lines',
+  fonts: {
+    display: 'Plus Jakarta Sans',
+    body: 'Plus Jakarta Sans',
+    import: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap',
+  },
+  chart: {
+    background: '#ffffff',
+    gridLines: '#e2e8f0',
+    gridLineWidth: 1,
+    axisLines: '#cbd5e1',
+    axisLineWidth: 1,
+    fillColor: '#3b82f6',
+    fillOpacity: 0.2,
+    strokeColor: '#3b82f6',
+    strokeWidth: 2,
+    dotColor: '#3b82f6',
+    dotRadius: 4,
+    labelColor: '#334155',
+    valueColor: '#64748b',
+    gridRings: 4,
+    gridStyle: 'octagon',
+  },
+  ui: {
+    pageBg: '#f8fafc',
+    panelBg: '#ffffff',
+    panelBorder: '#e2e8f0',
+    textPrimary: '#0f172a',
+    textSecondary: '#64748b',
+    accent: '#3b82f6',
+    accentHover: '#2563eb',
+    inputBg: '#f8fafc',
+    inputBorder: '#e2e8f0',
+    sliderTrack: '#e2e8f0',
+    sliderThumb: '#3b82f6',
+  },
+  effects: {},
+};

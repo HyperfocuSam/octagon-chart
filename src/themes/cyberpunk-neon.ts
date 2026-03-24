@@ -1,0 +1,56 @@
+import type { ChartTheme } from '../types/theme';
+
+export const cyberpunkNeon: ChartTheme = {
+  id: 'cyberpunk-neon',
+  name: 'Cyberpunk Neon',
+  description: 'Neon glow on dark with scan lines',
+  fonts: {
+    display: 'JetBrains Mono',
+    body: 'JetBrains Mono',
+    import: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap',
+  },
+  chart: {
+    background: '#0a0e1a',
+    gridLines: '#1a3a5c',
+    gridLineWidth: 1,
+    axisLines: '#1a3050',
+    axisLineWidth: 1,
+    fillColor: '#00ffff',
+    fillOpacity: 0.15,
+    strokeColor: '#00ffff',
+    strokeWidth: 2,
+    dotColor: '#ff00ff',
+    dotRadius: 4,
+    labelColor: '#00cccc',
+    valueColor: '#cc00cc',
+    glowColor: '#00ffff',
+    glowBlur: 10,
+    gradientFill: {
+      stops: [
+        { offset: '0%', color: '#ff00ff', opacity: 0.3 },
+        { offset: '50%', color: '#00ffff', opacity: 0.2 },
+        { offset: '100%', color: '#00ffff', opacity: 0.05 },
+      ],
+    },
+    gridRings: 5,
+    gridStyle: 'octagon',
+  },
+  ui: {
+    pageBg: '#060810',
+    panelBg: '#0c1020',
+    panelBorder: '#1a2a4a',
+    textPrimary: '#e0e8ff',
+    textSecondary: '#6080a0',
+    accent: '#00ffff',
+    accentHover: '#40ffff',
+    inputBg: '#080c18',
+    inputBorder: '#1a2a4a',
+    sliderTrack: '#1a2a4a',
+    sliderThumb: '#00ffff',
+  },
+  effects: {
+    chartShadow: '0 0 60px rgba(0, 255, 255, 0.15), 0 0 120px rgba(255, 0, 255, 0.08)',
+    animateGlow: true,
+    scanLines: true,
+  },
+};
